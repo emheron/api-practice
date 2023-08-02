@@ -1,10 +1,12 @@
+const config = require('./config.js');
+
 document.getElementById('search-btn').addEventListener('click', function() {
     const city = document.getElementById('city-input').value;
     getWeatherData(city);
 });
 
 function getWeatherData(city) {
-    const apiKey = '';
+    const apiKey = config.API_KEY;
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
 
     fetch(url)
