@@ -1,0 +1,20 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+#city-input {
+    padding: 10px;
+    font-size: 1em;
+    width: 30%;
+}
+
+#search-btn {
+    padding: 10px;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+#weather-data {
+    margin-top: 20px;
+}
