@@ -1,13 +1,10 @@
-const config = require('./config.js');
-
 document.getElementById('search-btn').addEventListener('click', function() {
     const city = document.getElementById('city-input').value;
     getWeatherData(city);
 });
 
 function getWeatherData(city) {
-    const apiKey = config.API_KEY;
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+    const url = `http://localhost:3000/weather?city=${city}`;
 
     fetch(url)
     .then(response => {
@@ -19,6 +16,7 @@ function getWeatherData(city) {
     .then(data => displayWeatherData(data))
     .catch(error => console.log('An error occurred: ' + error));
 }
+
 
 function displayWeatherData(data) {
     const weatherDiv = document.getElementById('weather-data');
@@ -45,3 +43,6 @@ function displayWeatherData(data) {
     weatherDescPara.innerText = `Conditions: ${data.weather[0].description}`;
     weatherDiv.appendChild(weatherDescPara);
 }
+
+
+
