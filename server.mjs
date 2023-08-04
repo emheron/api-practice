@@ -25,6 +25,21 @@ app.get('/weather', async (req, res) => {
     }
 });
 
+app.get('/forecast', async (req, res) => {
+    const city = req.query.city;
+    const apiKey = process.env.API_KEY;
+    const url = `api.openweathermap.org/data/2.5/forecast?q=${city},${stateCode},${countryCode}&appid=${apiKey}`;
+
+    try {
+        const forecastResponse = await fetch(url);
+        const forecastData = await forecastResponse.json();
+
+        res.send(forecastData);
+    } catch (error) {
+        console.log('An error occurred: ' + error);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
