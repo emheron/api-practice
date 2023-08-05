@@ -40,6 +40,12 @@ app.get('/forecast', async (req, res) => {
     }
 });
 
+app.get('/apod', async (req, res) => {
+    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.NASA_API_KEY}`);
+    const adata = await response.json();
+    res.json(adata);
+  });
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });

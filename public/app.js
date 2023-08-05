@@ -67,26 +67,66 @@ function displayForecastData(fdata) {
     forecastDiv.innerHTML = '';
 
     for (let i = 0; i < fdata.list.length; i++) {
+        const periodDiv = document.createElement('div');
+        periodDiv.className = 'forecast-box';
+
         const time = new Date(fdata.list[i].dt * 1000);
         const hour = time.getHours();
 
         const dateHeader = document.createElement('h2');
-        dateHeader.innerText = new Date(fdata.list[i].dt * 1000).toDateString();
-        forecastDiv.appendChild(dateHeader);
+        dateHeader.innerText = time.toDateString();
+        periodDiv.appendChild(dateHeader);
 
         const timePara = document.createElement('h3');
         timePara.innerText = `Time: ${hour}:00`;
-        forecastDiv.appendChild(timePara);
+        periodDiv.appendChild(timePara);
 
         const tempPara = document.createElement('p');
         tempPara.innerText = `Temperature: ${fdata.list[i].main.temp} °F, Low: ${fdata.list[i].main.temp_min} °F, High: ${fdata.list[i].main.temp_max} °F`;
-        forecastDiv.appendChild(tempPara);
+        periodDiv.appendChild(tempPara);
 
         const weatherDescPara = document.createElement('p');
         weatherDescPara.innerText = `Conditions: ${fdata.list[i].weather[0].description}`;
-        forecastDiv.appendChild(weatherDescPara);
+        periodDiv.appendChild(weatherDescPara);
+
+        forecastDiv.appendChild(periodDiv);
     }
 }
+
+
+function getAPOD() {
+    fetch('http://localhost:3000/apod')
+    .then(response => response.json())
+    .then(adata => {
+        displayAPOD(adata);
+    });
+}
+
+function displayAPOD(adata) {
+    const apodDiv = document.getElementById('apod');
+
+    while (apodDiv.firstChild) {
+        apodDiv.firstChild.remove();
+    }
+
+    const img = document.createElement('img');
+    img.src = adata.url;
+    img.alt = adata.title;
+    
+    apodDiv.appendChild(img);
+
+    const title = document.createElement('h2');
+    title.textContent = adata.title;
+    apodDiv.appendChild(title);
+
+    const explanation = document.createElement('p');
+    explanation.textContent = adata.explanation;
+    apodDiv.appendChild(explanation);
+}
+
+
+getAPOD();
+
 
 
 
