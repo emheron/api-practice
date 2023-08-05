@@ -66,19 +66,26 @@ function displayForecastData(fdata) {
 
     forecastDiv.innerHTML = '';
 
-    fdata.list.forEach(item => {
+    for (let i = 0; i < fdata.list.length; i++) {
+        const time = new Date(fdata.list[i].dt * 1000);
+        const hour = time.getHours();
+
         const dateHeader = document.createElement('h2');
-        dateHeader.innerText = new Date(item.dt * 1000).toDateString();
+        dateHeader.innerText = new Date(fdata.list[i].dt * 1000).toDateString();
         forecastDiv.appendChild(dateHeader);
 
+        const timePara = document.createElement('h3');
+        timePara.innerText = `Time: ${hour}:00`;
+        forecastDiv.appendChild(timePara);
+
         const tempPara = document.createElement('p');
-        tempPara.innerText = `Temperature: ${item.main.temp} °F, Low: ${item.main.temp_min} °F, High: ${item.main.temp_max} °F`;
+        tempPara.innerText = `Temperature: ${fdata.list[i].main.temp} °F, Low: ${fdata.list[i].main.temp_min} °F, High: ${fdata.list[i].main.temp_max} °F`;
         forecastDiv.appendChild(tempPara);
 
         const weatherDescPara = document.createElement('p');
-        weatherDescPara.innerText = `Conditions: ${item.weather[0].description}`;
+        weatherDescPara.innerText = `Conditions: ${fdata.list[i].weather[0].description}`;
         forecastDiv.appendChild(weatherDescPara);
-    });
+    }
 }
 
 
