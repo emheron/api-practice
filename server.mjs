@@ -26,9 +26,9 @@ app.get('/weather', async (req, res) => {
 });
 
 app.get('/forecast', async (req, res) => {
-    const city = req.query.city;
+    const { city, state, country } = req.query;
     const apiKey = process.env.API_KEY;
-    const url = `api.openweathermap.org/data/2.5/forecast?q=${city},${stateCode},${countryCode}&appid=${apiKey}`;
+    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},${country}&appid=${apiKey}&units=imperial`;
 
     try {
         const forecastResponse = await fetch(url);
