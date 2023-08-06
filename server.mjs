@@ -7,13 +7,17 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
+let weatherApiKey = process.env.WEATHER_API_KEY || '';
+let apodApiKey = process.env.APOD_API_KEY || '';
+
 app.use(cors());
 app.use(express.static('public'));
 
 app.get('/weather', async (req, res) => {
     const city = req.query.city;
-    const apiKey = process.env.API_KEY;
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+    const apikey = req.query.appid || weatherApiKey;
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}&units=imperial`;
+    console.log("Fetch URL: ", url);
 
     try {
         const weatherResponse = await fetch(url);
@@ -27,8 +31,8 @@ app.get('/weather', async (req, res) => {
 
 app.get('/forecast', async (req, res) => {
     const { city, state, country } = req.query;
-    const apiKey = process.env.API_KEY;
-    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},${country}&appid=${apiKey}&units=imperial`;
+    const apikey = req.query.appid || weatherApiKey;
+    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},${country}&appid=${apikey}&units=imperial`;
 
     try {
         const forecastResponse = await fetch(url);
@@ -41,7 +45,8 @@ app.get('/forecast', async (req, res) => {
 });
 
 app.get('/apod', async (req, res) => {
-    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.NASA_API_KEY}`);
+    const apikey = req.query.appid || apodApiKey;
+    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${apikey}`);
     const adata = await response.json();
     res.json(adata);
   });

@@ -6,8 +6,13 @@ document.getElementById('search-btn').addEventListener('click', function() {
     getForecastData(city,state,country);
 });
 
-function getWeatherData(city) {
-    const url = `http://localhost:3000/weather?city=${city}`;
+const city = document.getElementById('city-input').value;  // Add this line
+const apiKey = document.getElementById('weather-api-key').value;
+
+getWeatherData(city, apiKey);
+
+function getWeatherData(city, apiKey) {
+    const url = `http://localhost:3000/weather?city=${city}&appid=${apiKey}`;
 
     fetch(url)
     .then(response => {
@@ -16,12 +21,21 @@ function getWeatherData(city) {
         }
         return response.json();
     })
-    .then(wdata => displayWeatherData(wdata))
+    .then(wdata => {
+        if (wdata.cod !== 200) {
+            console.log('Incomplete weather data', wdata); 
+            return;  // return here to prevent further processing of incomplete data
+        }
+        displayWeatherData(wdata);
+    })
     .catch(error => console.log('An error occurred: ' + error));
 }
 
-
 function displayWeatherData(wdata) {
+    if (!wdata || !wdata.name || !wdata.sys || !wdata.main || !wdata.wind || !wdata.weather) {
+        console.log('Incomplete weather data', wdata);
+        return;
+    }
     const weatherDiv = document.getElementById('weather-data');
 
     weatherDiv.innerHTML = '';
@@ -48,7 +62,8 @@ function displayWeatherData(wdata) {
 }
 
 function getForecastData(city, state, country) {
-    const url = `http://localhost:3000/forecast?city=${city}&state=${state}&country=${country}`;
+    const apiKey = document.getElementById('weather-api-key').value;
+    const url = `http://localhost:3000/forecast?city=${city}&state=${state}&country=${country}&appid=${apiKey}`;
 
     fetch(url)
     .then(response => {
@@ -57,9 +72,16 @@ function getForecastData(city, state, country) {
         }
         return response.json();
     })
-    .then(fdata => displayForecastData(fdata))
+    .then(fdata => {
+        if (fdata.cod !== "200") {  
+            console.log('Incomplete forecast data', fdata); 
+            return; 
+        }
+        displayForecastData(fdata);
+    })
     .catch(error => console.log('An error occurred: ' + error));
 }
+
 
 function displayForecastData(fdata) {
     const forecastDiv = document.getElementById('forecast-data');
@@ -93,14 +115,17 @@ function displayForecastData(fdata) {
     }
 }
 
-
 function getAPOD() {
-    fetch('http://localhost:3000/apod')
+    const apiKey = document.getElementById('apod-api-key').value;
+    const url = `http://localhost:3000/apod?apodApiKey=${apiKey}`;
+
+    fetch(url)
     .then(response => response.json())
     .then(adata => {
         displayAPOD(adata);
     });
 }
+
 
 function displayAPOD(adata) {
     const apodDiv = document.getElementById('apod');
