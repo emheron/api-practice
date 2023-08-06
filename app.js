@@ -2,14 +2,11 @@ document.getElementById('search-btn').addEventListener('click', function() {
     const city = document.getElementById('city-input').value;
     const state = document.getElementById('state-input').value;
     const country = 'US';
-    getWeatherData(city);
-    getForecastData(city,state,country);
+    const apiKey = document.getElementById('weather-api-key').value;  // fetch apiKey here
+
+    getWeatherData(city, apiKey);
+    getForecastData(city, state, country);
 });
-
-const city = document.getElementById('city-input').value;  // Add this line
-const apiKey = document.getElementById('weather-api-key').value;
-
-getWeatherData(city, apiKey);
 
 function getWeatherData(city, apiKey) {
     const url = `http://localhost:3000/weather?city=${city}&appid=${apiKey}`;
