@@ -82,34 +82,56 @@ function getForecastData(city, state, country) {
 
 function displayForecastData(fdata) {
     const forecastDiv = document.getElementById('forecast-data');
-
+    const dailyData = groupByDay(fdata.list);
+    
     forecastDiv.innerHTML = '';
 
-    for (let i = 0; i < fdata.list.length; i++) {
-        const periodDiv = document.createElement('div');
-        periodDiv.className = 'forecast-box';
+    for (let date in dailyData) {
+        const dailyForecastDiv = document.createElement('div');
+        dailyForecastDiv.className = 'daily-forecast';
 
-        const time = new Date(fdata.list[i].dt * 1000);
-        const hour = time.getHours();
+        for (let forecast of dailyData[date]) {
+            const periodDiv = document.createElement('div');
+            periodDiv.className = 'forecast-box';
 
-        const dateHeader = document.createElement('h2');
-        dateHeader.innerText = time.toDateString();
-        periodDiv.appendChild(dateHeader);
+            const time = new Date(forecast.dt * 1000);
+            const hour = time.getHours();
 
-        const timePara = document.createElement('h3');
-        timePara.innerText = `Time: ${hour}:00`;
-        periodDiv.appendChild(timePara);
+            const dateHeader = document.createElement('h2');
+            dateHeader.innerText = time.toDateString();
+            periodDiv.appendChild(dateHeader);
 
-        const tempPara = document.createElement('p');
-        tempPara.innerText = `Temperature: ${fdata.list[i].main.temp} °F, Low: ${fdata.list[i].main.temp_min} °F, High: ${fdata.list[i].main.temp_max} °F`;
-        periodDiv.appendChild(tempPara);
+            const timePara = document.createElement('h3');
+            timePara.innerText = `Time: ${hour}:00`;
+            periodDiv.appendChild(timePara);
 
-        const weatherDescPara = document.createElement('p');
-        weatherDescPara.innerText = `Conditions: ${fdata.list[i].weather[0].description}`;
-        periodDiv.appendChild(weatherDescPara);
+            const tempPara = document.createElement('p');
+            tempPara.innerText = `Temperature: ${forecast.main.temp} °F, Low: ${forecast.main.temp_min} °F, High: ${forecast.main.temp_max} °F`;
+            periodDiv.appendChild(tempPara);
 
-        forecastDiv.appendChild(periodDiv);
+            const weatherDescPara = document.createElement('p');
+            weatherDescPara.innerText = `Conditions: ${forecast.weather[0].description}`;
+            periodDiv.appendChild(weatherDescPara);
+
+            dailyForecastDiv.appendChild(periodDiv);
+        }
+
+        forecastDiv.appendChild(dailyForecastDiv);
     }
+}
+
+function groupByDay(forecastList) {
+    const grouped = {};
+    
+    for (let forecast of forecastList) {
+        const date = new Date(forecast.dt * 1000).toDateString(); // Convert to readable date string
+        if (!grouped[date]) {
+            grouped[date] = [];
+        }
+        grouped[date].push(forecast);
+    }
+
+    return grouped;
 }
 
 function getAPOD() {

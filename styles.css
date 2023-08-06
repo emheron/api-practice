@@ -61,10 +61,8 @@ body {
 
 #forecast-data {
     display: flex;
-    justify-content: space-between;
-    align-items: start;
-    flex-wrap: wrap;
-    margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
     background-color: #222; 
     border-radius: 10px;
@@ -91,9 +89,19 @@ body {
     box-shadow: 0px 0px 10px 0px rgba(0,255,255,0.5); 
 }
 
+.daily-forecast {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px; 
+}
+
 #apod {
     display: inline-block;
-    width: 80%; /* Make the image container 80% wide on mobile by default */
+    width: 80%; 
     border: 1px solid #00FFFF; 
     border-radius: 10px; 
     box-shadow: 0px 0px 10px 0px rgba(0,255,255,0.5); 
