@@ -2,14 +2,15 @@ document.getElementById('search-btn').addEventListener('click', function() {
     const city = document.getElementById('city-input').value;
     const state = document.getElementById('state-input').value;
     const country = 'US';
-    const apiKey = document.getElementById('weather-api-key').value;  // fetch apiKey here
+    const apiKey = document.getElementById('weather-api-key').value;
 
     getWeatherData(city, apiKey);
     getForecastData(city, state, country);
+    getAPOD(); 
 });
 
 function getWeatherData(city, apiKey) {
-    const url = `http://localhost:3000/weather?city=${city}&appid=${apiKey}`;
+    const url = `/weather?city=${city}&appid=${apiKey}`;
 
     fetch(url)
     .then(response => {
@@ -21,7 +22,7 @@ function getWeatherData(city, apiKey) {
     .then(wdata => {
         if (wdata.cod !== 200) {
             console.log('Incomplete weather data', wdata); 
-            return;  // return here to prevent further processing of incomplete data
+            return; 
         }
         displayWeatherData(wdata);
     })
@@ -60,7 +61,7 @@ function displayWeatherData(wdata) {
 
 function getForecastData(city, state, country) {
     const apiKey = document.getElementById('weather-api-key').value;
-    const url = `http://localhost:3000/forecast?city=${city}&state=${state}&country=${country}&appid=${apiKey}`;
+    const url = `/forecast?city=${city}&state=${state}&country=${country}&appid=${apiKey}`;
 
     fetch(url)
     .then(response => {
@@ -124,7 +125,7 @@ function groupByDay(forecastList) {
     const grouped = {};
     
     for (let forecast of forecastList) {
-        const date = new Date(forecast.dt * 1000).toDateString(); // Convert to readable date string
+        const date = new Date(forecast.dt * 1000).toDateString();
         if (!grouped[date]) {
             grouped[date] = [];
         }
@@ -136,7 +137,7 @@ function groupByDay(forecastList) {
 
 function getAPOD() {
     const apiKey = document.getElementById('apod-api-key').value;
-    const url = `http://localhost:3000/apod?apodApiKey=${apiKey}`;
+    const url = `/apod?apodApiKey=${apiKey}`;
 
     fetch(url)
     .then(response => response.json())
@@ -167,10 +168,6 @@ function displayAPOD(adata) {
     explanation.textContent = adata.explanation;
     apodDiv.appendChild(explanation);
 }
-
-
-getAPOD();
-
 
 
 
