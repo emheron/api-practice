@@ -48,7 +48,6 @@ let weatherApiKey = process.env.WEATHER_API_KEY || '';
 let apodApiKey = process.env.APOD_API_KEY || '';
 
 app.use(cors());
-app.use(express.static('public'));
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
