@@ -56,8 +56,11 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/auth/google');
 }
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.get('/', ensureAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.render('index', { name: req.user.name });
 });
 
 app.get('/weather', async (req, res) => {
