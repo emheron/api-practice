@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
-import GoogleStrategy from 'passport-google-oauth20';
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 import session from 'express-session';
 
 dotenv.config();
@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 app.use(session({
     secret: process.env.OAUTH_SESSION_SECRET, 
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true
   }));
 
   app.use(passport.initialize());
@@ -29,7 +29,6 @@ app.use(session({
     done(null, user);
   }));
   
-
   passport.serializeUser((user, done) => {
     done(null, user);
   });
