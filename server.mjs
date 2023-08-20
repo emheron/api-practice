@@ -2,10 +2,41 @@ import express from 'express';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import passport from 'passport';
+import GoogleStrategy from 'passport-google-oauth20';
+import session from 'express-session';
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000; 
+
+app.use(session({
+    secret: process.env.OAUTH_SESSION_SECRET, 
+    resave: false,
+    saveUninitialized: false
+  }));
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: 'https://my-weather-dashboard-a3730f05ae8e.herokuapp.com/auth/google/callback'
+  }, (accessToken, refreshToken, profile, done) => {
+    const user = { name: profile.displayName };
+    done(null, user);
+  }));
+  
+
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
+  
+  passport.deserializeUser((user, done) => {
+    done(null, user);
+  });
 
 let weatherApiKey = process.env.WEATHER_API_KEY || '';
 let apodApiKey = process.env.APOD_API_KEY || '';
@@ -50,6 +81,17 @@ app.get('/apod', async (req, res) => {
     const adata = await response.json();
     res.json(adata);
   });
+
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile']
+  }));
+
+  app.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+
+      res.redirect('/');
+    });
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
