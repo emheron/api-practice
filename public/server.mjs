@@ -5,6 +5,7 @@ import cors from 'cors';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
+import path from 'path';
 
 dotenv.config();
 
@@ -41,7 +42,18 @@ let weatherApiKey = process.env.WEATHER_API_KEY || '';
 let apodApiKey = process.env.APOD_API_KEY || '';
 
 app.use(cors());
-app.use(express.static('.'));
+app.use(express.static('public'));
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/auth/google');
+}
+
+app.get('/', ensureAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
 
 app.get('/weather', async (req, res) => {
     const city = req.query.city;
